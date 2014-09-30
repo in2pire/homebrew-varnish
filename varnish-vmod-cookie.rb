@@ -1,5 +1,4 @@
 require 'formula'
-require File.expand_path("../../../../Formula/varnish", __FILE__)
 
 class VarnishVmodCookie < Formula
   homepage 'https://github.com/in2pire/libvmod-cookie'
@@ -40,8 +39,5 @@ class VarnishVmodCookie < Formula
                           "VMODDIR=#{vmoddir}"
     system "make"
     system "make install"
-
-    # Remove Varnish src
-    system "rm -rf /tmp/varnish"
   end
 end
