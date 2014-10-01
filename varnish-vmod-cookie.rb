@@ -20,23 +20,23 @@ class VarnishVmodCookie < Formula
   end
 
   def install
-    ENV['VARNISHAPI_CFLAGS'] = "-I#{Formula['varnish'].opt_prefix}/include/varnish"
-    ENV['VARNISHAPI_LIBS'] = "-L#{Formula['varnish'].opt_prefix}/lib -lvarnishapi"
+    varnish_prefix = "#{Formula['varnish'].prefix}"
 
-    ENV.prepend_create_path "PYTHONPATH", buildpath+"lib/python2.7/site-packages"
+    ENV['VARNISHAPI_CFLAGS'] = "-I#{varnish_prefix}/include/varnish"
+    ENV['VARNISHAPI_LIBS'] = "-L#{varnish_prefix}/lib -lvarnishapi"
+
+    ENV.prepend_create_path "PYTHONPATH", buildpath + "lib/python2.7/site-packages"
     resource("docutils").stage do
       system "python", "setup.py", "install", "--prefix=#{buildpath}"
     end
-
-    vmoddir = "#{Formula['varnish'].opt_prefix}/lib/varnish/vmods"
 
     system "./autogen.sh"
     system "./configure", "--disable-dependency-tracking",
                           "--prefix=#{prefix}",
                           "--mandir=#{man}",
                           "--with-rst2man=#{buildpath}/bin/rst2man.py",
-                          "--with-rst2html=#{buildpath}/bin/rst2html.py",
-                          "VMODDIR=#{vmoddir}"
+                          "--with-rst2html=#{buildpath}/bin/rst2html.py"
+
     system "make"
     system "make install"
   end
